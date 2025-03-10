@@ -38,11 +38,11 @@ def feddaw_alg(args, n_comm_rounds, nets, global_model, party_list_rounds, net_d
         if round==0 or args.sample_fraction<1.0:
             print(f'Dataset size weight : {fed_avg_freqs}')
 
-        sim_weights = np.zeros_like(fed_avg_freqs, np.float32)
-        xi_t = np.zeros_like(fed_avg_freqs, np.float32)
+        sim_weights = np.zeros_like(fed_avg_freqs, dtype=np.float32)
+        xi_t = np.zeros_like(fed_avg_freqs, dtype=np.float32)
         for net_id, net in enumerate(nets_this_round.values()):
             if round==0:
-                xi_t = fed_avg_freqs
+                xi_t = np.asarray(fed_avg_freqs, dtype=np.float32)
                 break
             else:
                 net_para = net.state_dict()
