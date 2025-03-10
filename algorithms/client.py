@@ -39,7 +39,8 @@ def train_net(net_id, net, train_dataloader, test_dataloader, epochs, lr, args_o
 
     test_acc, conf_matrix, _ = compute_accuracy(net, test_dataloader, get_confusion_matrix=True, device=device)
     logger.info('>> Test accuracy: %f' % test_acc)
-    net.to('cpu')
+    #net.to('cpu')
+    net.to('cuda')
     return test_acc
 
 def train_net_scaffold(net_id, net, global_model, c_local, c_global, train_dataloader, test_dataloader, epochs, lr, args_optimizer, args, device="cpu", logger=None):
@@ -140,7 +141,8 @@ def train_net_fedprox(net_id, net, global_net, train_dataloader, test_dataloader
         logger.info('Epoch: %d Loss: %f' % (epoch, epoch_loss))
 
     test_acc, conf_matrix, _ = compute_accuracy(net, test_dataloader, get_confusion_matrix=True, device=device)
-    net.to('cpu')
+    #net.to('cpu') @maryam
+    net.to('cuda')
     return test_acc
 
 def train_net_fedcon(net_id, net, global_net, previous_nets, train_dataloader, test_dataloader, epochs, lr, args_optimizer, mu, temperature, args,
@@ -198,7 +200,8 @@ def train_net_fedcon(net_id, net, global_net, previous_nets, train_dataloader, t
     for previous_net in previous_nets:
         previous_net.to('cpu')
     test_acc, conf_matrix, _ = compute_accuracy(net, test_dataloader, get_confusion_matrix=True, device=device)
-    net.to('cpu')
+    #net.to('cpu')@maryam
+    net.to('cuda')
     return test_acc
 
 def local_train_net(nets, args, net_dataidx_map, train_dl=None, test_dl=None, global_model = None, prev_model_pool = None, round=None, device="cpu", logger=None):
@@ -224,7 +227,8 @@ def local_train_net(nets, args, net_dataidx_map, train_dl=None, test_dl=None, gl
         print("Training network %s, n_training: %d, final test acc %f." % (str(net_id), len(dataidxs), testacc))
         acc_list.append(testacc)
     if global_model:
-        global_model.to('cpu')
+        #global_model.to('cpu') @maryam
+        global_model.to('cuda')
     return acc_list
 
 def local_train_net_scaffold(nets, global_model, c_nets, c_global, args, net_dataidx_map, train_dl=None, test_dl = None, device="cpu", logger=None):
@@ -242,8 +246,8 @@ def local_train_net_scaffold(nets, global_model, c_nets, c_global, args, net_dat
         n_epoch = args.epochs
 
         testacc, c_delta_para = train_net_scaffold(net_id, net, global_model, c_nets[net_id], c_global, train_dl_local, test_dl, n_epoch, args.lr, args.optimizer, args, device=device, logger=logger)
-
-        c_nets[net_id].to('cpu')
+        #c_nets[net_id].to('cpu') @maryam
+        c_nets[net_id].to('cuda')
         for key in total_delta:   
             total_delta[key] += c_delta_para[key] / len(c_nets)
         print("Training network %s, n_training: %d, final test acc %f." % (str(net_id), len(dataidxs), testacc))
