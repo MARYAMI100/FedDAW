@@ -4,6 +4,7 @@ from utils.model import *
 from utils.utils import *
 from algorithms.client import local_train_net
 import math
+import numpy as np
 
 def getWeightsBasedOnSimilarity(global_w, net_para):
     return 0.1
