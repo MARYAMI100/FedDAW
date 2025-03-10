@@ -5,7 +5,11 @@ from utils.utils import *
 from algorithms.client import local_train_net
 import math
 
-def fedavg_alg(args, n_comm_rounds, nets, global_model, party_list_rounds, net_dataidx_map, train_local_dls, test_dl, traindata_cls_counts, moment_v, device, global_dist, logger):
+def getWeightsBasedOnSimilarity(global_w, net_para):
+    return 0.1
+
+
+def feddaw_alg(args, n_comm_rounds, nets, global_model, party_list_rounds, net_dataidx_map, train_local_dls, test_dl, traindata_cls_counts, moment_v, device, global_dist, logger):
     best_test_acc=0
     record_test_acc_list = []
 
