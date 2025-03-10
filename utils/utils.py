@@ -76,7 +76,7 @@ def load_cifar100_data(datadir, download):
 
 def load_fmnist_data(datadir, download):
     transform = transforms.Compose([transforms.ToTensor()])
-
+    download = True # @maryam : temp
     fmnist_train_ds = FashionMNIST_truncated(datadir, train=True, download=download, transform=transform)
     fmnist_test_ds = FashionMNIST_truncated(datadir, train=False, download=download, transform=transform)
 
