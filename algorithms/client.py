@@ -212,7 +212,7 @@ def local_train_net(nets, args, net_dataidx_map, train_dl=None, test_dl=None, gl
         dataidxs = net_dataidx_map[net_id]
         train_dl_local=train_dl[net_id]   
         n_epoch = args.epochs
-        if args.alg == 'fedavg' or args.alg == 'fednova':
+        if args.alg == 'fedavg' or args.alg == 'fednova' or args.alg == 'feddaw':
             testacc = train_net(net_id, net, train_dl_local, test_dl, n_epoch, args.lr, args.optimizer, args,
                                         device=device, logger=logger)
         elif args.alg == 'fedprox':
