@@ -14,4 +14,5 @@ CUDA_VISIBLE_DEVICES=0 python main.py \
 --mu=0.1 \
 --partition=noniid-1 \
 --logdir='./logs/' \
---datadir='./dataset/fmnist'
+--datadir='./dataset/fmnist'\
+--download_data = 1
