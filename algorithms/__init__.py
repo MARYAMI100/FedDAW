@@ -5,3 +5,4 @@ from algorithms.feddyn import feddyn_alg
 from algorithms.feddc import feddc_alg
 from algorithms.fednova import fednova_alg
 from algorithms.fedprox import fedprox_alg
+from algorithms.feddaw import feddaw_alg
