@@ -9,12 +9,12 @@ import numpy as np
 def getWeightsBasedOnSimilarity(global_w, net_para):
     flattened_arrays = []
     for key in global_w.keys():
-          flattened_arrays.append(global_w[key].view(-1).numpy())
+          flattened_arrays.append(global_w[key].cpu().view(-1).numpy())
     global_w_flat = np.concatenate(flattened_arrays)
 
     flattened_arrays = []
     for key in net_para.keys():
-        flattened_arrays.append(net_para[key].view(-1).numpy())
+        flattened_arrays.append(net_para[key].cpu().view(-1).numpy())
     client_flat = np.concatenate(flattened_arrays)
     
     dot_product = np.dot(global_w_flat, client_flat)    
@@ -26,7 +26,7 @@ def getWeightsBasedOnSimilarity(global_w, net_para):
 def getWeightsBasedOnCorentropySimilarity(global_w, net_para):
     flattened_arrays = []
     for key in global_w.keys():
-          flattened_arrays.append(global_w[key].view(-1).numpy())
+          flattened_arrays.append(global_w[key].cpu().view(-1).numpy())
     global_w_flat = np.concatenate(flattened_arrays)
 
     flattened_arrays = []
