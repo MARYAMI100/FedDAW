@@ -31,7 +31,7 @@ def getWeightsBasedOnCorentropySimilarity(global_w, net_para):
 
     flattened_arrays = []
     for key in net_para.keys():
-        flattened_arrays.append(net_para[key].view(-1).numpy())
+        flattened_arrays.append(net_para[key].cpu().view(-1).numpy())
     client_flat = np.concatenate(flattened_arrays)
     
     diff = global_w_flat - client_flat
