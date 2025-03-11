@@ -35,7 +35,7 @@ def getWeightsBasedOnCorentropySimilarity(global_w, net_para):
     client_flat = np.concatenate(flattened_arrays)
     
     diff = global_w_flat - client_flat
-    sigma = 1
+    sigma = 0.5
     kernel_values = gaussian_kernel(diff, sigma)
     similarity = np.mean(kernel_values)
 
