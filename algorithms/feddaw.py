@@ -7,9 +7,41 @@ import math
 import numpy as np
 
 def getWeightsBasedOnSimilarity(global_w, net_para):
-    return 0.1
+    flattened_arrays = []
+    for key in global_w.keys():
+          flattened_arrays.append(global_w[key].view(-1).numpy())
+    global_w_flat = np.concatenate(flattened_arrays)
 
+    flattened_arrays = []
+    for key in net_para.keys():
+        flattened_arrays.append(net_para[key].view(-1).numpy())
+    client_flat = np.concatenate(flattened_arrays)
+    
+    dot_product = np.dot(global_w_flat, client_flat)    
+    norm_a1 = np.linalg.norm(global_w_flat)
+    norm_a2 = np.linalg.norm(client_flat)
+    
+    return np.abs(dot_product / (norm_a1 * norm_a2))
 
+def getWeightsBasedOnCorentropySimilarity(global_w, net_para):
+    flattened_arrays = []
+    for key in global_w.keys():
+          flattened_arrays.append(global_w[key].view(-1).numpy())
+    global_w_flat = np.concatenate(flattened_arrays)
+
+    flattened_arrays = []
+    for key in net_para.keys():
+        flattened_arrays.append(net_para[key].view(-1).numpy())
+    client_flat = np.concatenate(flattened_arrays)
+    
+    diff = global_w_flat - client_flat
+    sigma = 1
+    kernel_values = gaussian_kernel(diff, sigma)
+    similarity = np.mean(kernel_values)
+
+def gaussian_kernel(x, sigma):
+    return np.exp(-(x**2) / (2 * sigma**2))
+    
 def feddaw_alg(args, n_comm_rounds, nets, global_model, party_list_rounds, net_dataidx_map, train_local_dls, test_dl, traindata_cls_counts, moment_v, device, global_dist, logger):
     best_test_acc=0
     record_test_acc_list = []
@@ -28,6 +60,7 @@ def feddaw_alg(args, n_comm_rounds, nets, global_model, party_list_rounds, net_d
         nets_this_round = {k: nets[k] for k in party_list_this_round}
         for net in nets_this_round.values():
             net.load_state_dict(global_w)
+        
         # Local update
         local_train_net(nets_this_round, args, net_dataidx_map, train_dl=train_local_dls, test_dl=test_dl, device=device, logger=logger)
         
@@ -47,6 +80,7 @@ def feddaw_alg(args, n_comm_rounds, nets, global_model, party_list_rounds, net_d
             else:
                 net_para = net.state_dict()
                 sim_weights[net_id] = getWeightsBasedOnSimilarity(global_w, net_para)
+                #sim_weights[net_id] = getWeightsBasedOnCorentropySimilarity(global_w, net_para)
                 etha0 = 0.1
                 gamma_t = math.exp(-1*etha0 * round)
                 xi_t[net_id] = gamma_t * fed_avg_freqs[net_id] + (1 - gamma_t)*sim_weights[net_id]
