@@ -38,6 +38,7 @@ def getWeightsBasedOnCorentropySimilarity(global_w, net_para):
     sigma = 0.5
     kernel_values = gaussian_kernel(diff, sigma)
     similarity = np.mean(kernel_values)
+    return similarity
 
 def gaussian_kernel(x, sigma):
     return np.exp(-(x**2) / (2 * sigma**2))
@@ -79,8 +80,8 @@ def feddaw_alg(args, n_comm_rounds, nets, global_model, party_list_rounds, net_d
                 break
             else:
                 net_para = net.state_dict()
-                sim_weights[net_id] = getWeightsBasedOnSimilarity(global_w, net_para)
-                #sim_weights[net_id] = getWeightsBasedOnCorentropySimilarity(global_w, net_para)
+                #sim_weights[net_id] = getWeightsBasedOnSimilarity(global_w, net_para)
+                sim_weights[net_id] = getWeightsBasedOnCorentropySimilarity(global_w, net_para)
                 etha0 = 0.1
                 gamma_t = math.exp(-1*etha0 * round)
                 xi_t[net_id] = gamma_t * fed_avg_freqs[net_id] + (1 - gamma_t)*sim_weights[net_id]
