@@ -83,7 +83,7 @@ def feddaw_alg(args, n_comm_rounds, nets, global_model, party_list_rounds, net_d
                 gamma_t = math.exp(-1*etha0 * round)
                 xi_t[net_id] = gamma_t * fed_avg_freqs[net_id] + (1 - gamma_t)*sim_weights[net_id]
         lamb = 0.1
-        beta0 = 1
+        beta0 = 5
         beta_t = beta0 * math.exp(-1*lamb*round)
         omega = np.exp(beta_t * xi_t) / np.sum(np.exp(beta_t * xi_t))
         print(f'FedDAW weight in round {round} is {omega}')
