@@ -4,7 +4,7 @@ CUDA_VISIBLE_DEVICES=0 python main.py \
 --disco_a 0.5 \
 --disco_b 0.1 \
 --beta=0.5 \
---n_parties=5 \
+--n_parties=4 \
 --epochs=5 \
 --comm_round=5 \
 --lr=0.01 \
@@ -12,6 +12,6 @@ CUDA_VISIBLE_DEVICES=0 python main.py \
 --model=simple-cnn-mnist \
 --alg=feddaw \
 --mu=0.1 \
---partition=noniid-1 \
+--partition=oneclassim \
 --logdir='./logs/' \
 --datadir='./dataset/fmnist'\
