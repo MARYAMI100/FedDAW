@@ -162,7 +162,7 @@ def partition_data(args):
         _, y_train, _, _ = load_HAM10000_data(datadir, download)
     n_train = y_train.shape[0]
 
-
+    labels = y_train
     if partition == "oneclassim":
         class_0_ratio=0.85
         samples_per_class=100
