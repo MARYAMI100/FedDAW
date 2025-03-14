@@ -68,9 +68,6 @@ def feddaw_alg(args, n_comm_rounds, nets, global_model, party_list_rounds, net_d
         # Aggregation weight calculation
         total_data_points = sum([len(net_dataidx_map[r]) for r in party_list_this_round])
         fed_avg_freqs = [len(net_dataidx_map[r]) / total_data_points for r in party_list_this_round]
-        
-        if round==0 or args.sample_fraction<1.0:
-            print(f'Dataset size weight : {fed_avg_freqs}')
 
         sim_weights = np.zeros_like(fed_avg_freqs, dtype=np.float32)
         xi_t = np.zeros_like(fed_avg_freqs, dtype=np.float32)
@@ -89,6 +86,7 @@ def feddaw_alg(args, n_comm_rounds, nets, global_model, party_list_rounds, net_d
         beta0 = 1
         beta_t = beta0 * math.exp(-1*lamb*round)
         omega = np.exp(beta_t * xi_t) / np.sum(np.exp(beta_t * xi_t))
+        print(f'FedDAW weight in round {round} is {omega}')
         
         # Model aggregation
         for net_id, net in enumerate(nets_this_round.values()):
