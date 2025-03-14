@@ -162,10 +162,49 @@ def partition_data(args):
         _, y_train, _, _ = load_HAM10000_data(datadir, download)
     n_train = y_train.shape[0]
 
-    if partition == "homo" or partition == "iid":
+
+    if partition == "oneclassim":
+        class_0_ratio=0.85
+        samples_per_class=100
+        class_idxs = {}
+        for class_label in np.unique(labels):
+            class_idxs[class_label] = np.where(labels == class_label)[0]
+            
+        # Assign data to net0
+        net0_idxs = []
+        
+        # Assign 85% of class 0 to net0
+        class_0_size = int(len(class_idxs[0]) * class_0_ratio)
+        net0_idxs.extend(np.random.choice(class_idxs[0], class_0_size, replace=False))
+        
+        # Assign 100 samples from each of the other classes to net0
+        for class_label in class_idxs:
+            if class_label != 0:
+                net0_idxs.extend(np.random.choice(class_idxs[class_label], samples_per_class, replace=False))
+        
+        # Remove assigned indices from the class_idxs dictionary
+        for class_label in class_idxs:
+            if class_label == 0:
+                class_idxs[class_label] = np.setdiff1d(class_idxs[class_label], net0_idxs[:class_0_size])
+            else:
+                class_idxs[class_label] = np.setdiff1d(class_idxs[class_label], net0_idxs[-samples_per_class:])
+        
+        # Assign remaining data uniformly to other nets
+        remaining_idxs = np.concatenate([class_idxs[class_label] for class_label in class_idxs])
+        remaining_idxs = np.random.permutation(remaining_idxs)
+        batch_idxs = np.array_split(remaining_idxs, n_parties - 1)
+        
+        # Create net_dataidx_map
+        net_dataidx_map = {0: np.array(net0_idxs)}
+        for i in range(1, n_parties):
+            net_dataidx_map[i] = batch_idxs[i - 1]
+    
+    elif partition == "homo" or partition == "iid":
         idxs = np.random.permutation(n_train)
         batch_idxs = np.array_split(idxs, n_parties)
         net_dataidx_map = {i: batch_idxs[i] for i in range(n_parties)}
+        for net_id, idxs in net_dataidx_map.items():
+            print(f"net{net_id}: Class distribution = {np.bincount(labels[idxs])}. ",np.sum(np.bincount(labels[idxs])))
 
     elif partition == "noniid-1":
         min_size = 0
