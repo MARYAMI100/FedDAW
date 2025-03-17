@@ -30,8 +30,8 @@ def fedavg_alg(args, n_comm_rounds, nets, global_model, party_list_rounds, net_d
         # Aggregation weight calculation
         total_data_points = sum([len(net_dataidx_map[r]) for r in party_list_this_round])
         fed_avg_freqs = [len(net_dataidx_map[r]) / total_data_points for r in party_list_this_round]
-        if round==0 or args.sample_fraction<1.0:
-            print(f'Dataset size weight : {fed_avg_freqs}')
+        #if round==0 or args.sample_fraction<1.0:
+            #print(f'Dataset size weight : {fed_avg_freqs}')
 
         if args.disco: # Discrepancy-aware collaboration
             distribution_difference = get_distribution_difference(traindata_cls_counts, participation_clients=party_list_this_round, metric=args.measure_difference, hypo_distribution=global_dist)
