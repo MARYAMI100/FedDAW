@@ -38,7 +38,9 @@ def fedavg_alg(args, n_comm_rounds, nets, global_model, party_list_rounds, net_d
             fed_avg_freqs = disco_weight_adjusting(fed_avg_freqs, distribution_difference, args.disco_a, args.disco_b)
             if round==0 or args.sample_fraction<1.0:
                 print(f'Distribution_difference : {distribution_difference}\nDisco Aggregation Weights : {fed_avg_freqs}')
-
+        
+        print(f'FedAvg weight in round {round} is {fed_avg_freqs}')
+        
         # Model aggregation
         for net_id, net in enumerate(nets_this_round.values()):
             net_para = net.state_dict()
